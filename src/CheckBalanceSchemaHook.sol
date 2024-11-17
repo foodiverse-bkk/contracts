@@ -68,7 +68,8 @@ contract CheckBalanceSchemaHook is ISPHook {
         }
     }
 
-    /// @notice Private function to verify native token (ETH) balance
+    /// @notice Private function to verify native token (ETH) balance deposited to the contract
+    /// is equal to the expected value
     /// @param attestationId The ID of the attestation to verify against
     function _verifyNativeBalance(uint64 attestationId) private view {
         uint256 expectedBalance = _getAttestationTotal(attestationId);
@@ -79,7 +80,8 @@ contract CheckBalanceSchemaHook is ISPHook {
         }
     }
 
-    /// @notice Private function to verify ERC20 token balance
+    /// @notice Private function to verify ERC20 token balance that was deposited to the contract
+    /// is equal to the expected value
     /// @param attestationId The ID of the attestation to verify against
     function _verifyTokenBalance(uint64 attestationId) private view {
         uint256 expectedBalance = _getAttestationTotal(attestationId);
