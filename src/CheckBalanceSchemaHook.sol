@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import { ISPHook } from "../lib/sign-protocol-evm/src/interfaces/ISPHook.sol";
-import { ISP } from "../lib/sign-protocol-evm/src/interfaces/ISP.sol";
-import { Attestation } from "../lib/sign-protocol-evm/src/models/Attestation.sol";
-import { IERC20, IERC20Metadata } from "../lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+import {ISPHook} from "../lib/sign-protocol-evm/src/interfaces/ISPHook.sol";
+import {ISP} from "../lib/sign-protocol-evm/src/interfaces/ISP.sol";
+import {Attestation} from "../lib/sign-protocol-evm/src/models/Attestation.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 /**
  * @title Check Balance Schema Hook
@@ -18,7 +19,7 @@ contract CheckBalanceSchemaHook is ISPHook {
 
     /// @notice The ERC20 token contract to verify balances for
     IERC20 public immutable paymentToken;
-    
+
     /// @notice The SIGN Protocol contract
     ISP public immutable sp;
 
@@ -53,10 +54,14 @@ contract CheckBalanceSchemaHook is ISPHook {
     /// @notice Private function to get total value from attestation
     /// @param attestationId The ID of the attestation
     /// @return total The total value from the attestation
-    function _getAttestationTotal(uint64 attestationId) private view returns (uint256) {
-        try sp.getAttestation(attestationId) returns (Attestation memory attestation) {
+    function _getAttestationTotal(
+        uint64 attestationId
+    ) private view returns (uint256) {
+        try sp.getAttestation(attestationId) returns (
+            Attestation memory attestation
+        ) {
             // Decode the total value from the attestation data
-            (uint256 total) = abi.decode(attestation.attestationData, (uint256));
+            uint256 total = abi.decode(attestation.data, (uint256));
             return total;
         } catch {
             revert AttestationLookupFailed();
@@ -98,8 +103,11 @@ contract CheckBalanceSchemaHook is ISPHook {
         }
 
         // Optional: Verify the token has the expected decimals (if it's supposed to be USDC)
-        try IERC20Metadata(address(paymentToken)).decimals() returns (uint8 decimals) {
-            if (decimals != 6) { // USDC uses 6 decimals
+        try IERC20Metadata(address(paymentToken)).decimals() returns (
+            uint8 decimals
+        ) {
+            if (decimals != 6) {
+                // USDC uses 6 decimals
                 revert InvalidToken();
             }
         } catch {
@@ -158,4 +166,4 @@ contract CheckBalanceSchemaHook is ISPHook {
         // Revocations always pass
         return;
     }
-} 
+}

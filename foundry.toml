@@ -5,5 +5,13 @@ libs = ["lib"]
 
 [rpc_endpoints]
 base_sepolia = "https://sepolia.base.org"
+zircuit_testnet = "https://zircuit1.p2pify.com/"
+mantle_testnet = "https://rpc.sepolia.mantle.xyz"
+morph_testnet = "https://rpc-holesky.morphl2.io"
+polygon_testnet = "https://rpc-amoy.polygon.technology"
+scroll_testnet = "https://rpc.ankr.com/scroll_sepolia_testnet"
+
+[etherscan]
+base_sepolia = { key = "BEH7Y1KKMYDKNV4416SEV3EQ1PT9AWC4Y8" }
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
